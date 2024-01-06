@@ -18,9 +18,9 @@
 
 <!-- JS  -->
 <script>
-export default{
+export default {
     name: 'Indecision',
-    data(){
+    data() {
         return {
             question: null,
             answer: null,
@@ -29,75 +29,87 @@ export default{
         }
 
     },
-    methods:{
-        async getAnswer(){
-            this.answer = 'Pensando...'
+    methods: {
+        async getAnswer() {
 
-            const { answer, image } = await fetch('https://yesno.wtf/api').then( r => r.json())
+            try {
+                this.answer = 'Pensando...'
 
-            this.answer = answer === 'yes' ? 'Sí!' : answer === 'no' ? 'No!' : 'Tal vez'
-            this.img = image
+                const { answer, image } = await fetch('https://yesno.wtf/api').then(r => r.json())
+
+                this.answer = answer === 'yes' ? 'Sí!' : answer === 'no' ? 'No!' : 'Tal vez'
+                this.img = image
+
+            } catch (error) {
+                console.log ('IndecisionComponent: ', error)
+                this.answer = 'No se pudo cargar del API'
+                this.img = null
+            }
+
         }
     },
     watch: {
-            question( value, oldValue){
+        question(value, oldValue) {
 
-                this.isValidQuestion = false
+            this.isValidQuestion = false
 
-                if(!value.includes('?')) return
+            console.log({ value })
 
-                this.isValidQuestion = true
+            if (!value.includes('?')) return
 
-                this.getAnswer()
-            }
+            this.isValidQuestion = true
+
+            this.getAnswer()
         }
+    }
 }
 </script>
 
 <!-- CSS -->
 <style scoped>
+img,
+.bg-dark {
+    height: 100vh;
+    left: 0px;
+    max-height: 100%;
+    max-width: 100%;
+    position: fixed;
+    top: 0px;
+    width: 100vw;
+}
 
-    img, .bg-dark {
-        height: 100vh;
-        left: 0px;
-        max-height: 100%;
-        max-width: 100%;
-        position: fixed;
-        top: 0px;
-        width: 100vw;
-    }
+.bg-dark {
+    background-color: rgba(0, 0, 0, 0.4);
+}
 
-    .bg-dark {
-        background-color: rgba(0, 0, 0, 0.4);
-    }
+.indecision-container {
+    position: relative;
+    z-index: 99;
+}
 
-    .indecision-container {
-        position: relative;
-        z-index: 99;
-    }
-    
-    input {
-        width: 250px;
-        padding: 10px 15px;
-        border-radius: 5px;
-        border: none;
-    }
-    input:focus {
-        outline: none;
-    }
+input {
+    width: 250px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+}
 
-    p {
-        color: white;
-        font-size: 20px;
-        margin-top: 15px;
-    }
+input:focus {
+    outline: none;
+}
 
-    h1, h2 {
-        color: white;
-    }
-    
-    h2 {
-        margin-top: 150px;
-    }
+p {
+    color: white;
+    font-size: 20px;
+    margin-top: 15px;
+}
 
+h1,
+h2 {
+    color: white;
+}
+
+h2 {
+    margin-top: 150px;
+}
 </style>
